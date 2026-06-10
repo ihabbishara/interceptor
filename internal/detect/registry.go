@@ -6,5 +6,6 @@ func All() []Detector {
 	return []Detector{
 		PoisoningDetector{},
 		UnicodeDetector{},
+		SecretsDetector{},
 	}
 }
