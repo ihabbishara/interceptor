@@ -2,9 +2,11 @@ package mcp
 
 import (
 	"bufio"
+	"context"
 	"encoding/json"
 	"io"
 	"testing"
+	"time"
 )
 
 // fakeServer speaks just enough MCP over the given pipes: answers
@@ -61,5 +63,18 @@ func TestListToolsServerClosesEarly(t *testing.T) {
 
 	if _, err := listToolsOverStream(clientRead, clientWrite, "dead"); err == nil {
 		t.Fatal("expected error when server closes stream")
+	}
+}
+
+func TestScanStdioServerKillsGrandchildrenOnTimeout(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
+	start := time.Now()
+	_, err := ScanStdioServer(ctx, "sleep 60 | cat")
+	if err == nil {
+		t.Fatal("expected error on timeout")
+	}
+	if elapsed := time.Since(start); elapsed > 5*time.Second {
+		t.Fatalf("scan blocked %v past its 1s deadline (grandchild held the pipe)", elapsed)
 	}
 }
