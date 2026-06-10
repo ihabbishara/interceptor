@@ -7,5 +7,6 @@ func All() []Detector {
 		PoisoningDetector{},
 		UnicodeDetector{},
 		SecretsDetector{},
+		SensitiveParamsDetector{},
 	}
 }
