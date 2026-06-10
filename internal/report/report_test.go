@@ -27,6 +27,16 @@ func TestTerminalWithFindings(t *testing.T) {
 	}
 }
 
+func TestTerminalEscapesControlCharacters(t *testing.T) {
+	out := Terminal(&scan.Report{ScannedManifests: 1, ScannedTools: 1, Findings: []detect.Finding{
+		{Detector: "d", Severity: detect.SeverityHigh, Title: "T",
+			Server: "evil\x1b[2K\x1b[1Aserver", Tool: "t\x1b[31m", Evidence: "e"},
+	}})
+	if strings.Contains(out, "\x1b") {
+		t.Fatalf("raw escape byte leaked into terminal output:\n%q", out)
+	}
+}
+
 func TestBadgeURL(t *testing.T) {
 	if !strings.Contains(BadgeURL(0), "clean-brightgreen") {
 		t.Fatalf("clean badge wrong: %s", BadgeURL(0))

@@ -27,7 +27,7 @@ func Terminal(r *scan.Report) string {
 	}
 	b.WriteString("\n\n")
 	for _, f := range r.Findings {
-		fmt.Fprintf(&b, "[%s] %s\n  server=%s tool=%s detector=%s\n  evidence: %q\n\n",
+		fmt.Fprintf(&b, "[%s] %s\n  server=%q tool=%q detector=%s\n  evidence: %q\n\n",
 			strings.ToUpper(string(f.Severity)), f.Title, f.Server, f.Tool, f.Detector, f.Evidence)
 	}
 	return b.String()
