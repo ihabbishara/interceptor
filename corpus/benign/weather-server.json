@@ -1,0 +1,10 @@
+{
+  "expect": [],
+  "manifest": {
+    "server": "weather",
+    "tools": [
+      {"name": "get_forecast", "description": "Get the weather forecast for a location over the next several days.", "inputSchema": {"type": "object", "properties": {"latitude": {"type": "number"}, "longitude": {"type": "number"}}}},
+      {"name": "get_alerts", "description": "Get active weather alerts for a US state.", "inputSchema": {"type": "object", "properties": {"state": {"type": "string"}}}}
+    ]
+  }
+}

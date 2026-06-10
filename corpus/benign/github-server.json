@@ -1,0 +1,11 @@
+{
+  "expect": [],
+  "manifest": {
+    "server": "github",
+    "tools": [
+      {"name": "create_issue", "description": "Create a new issue in a GitHub repository.", "inputSchema": {"type": "object", "properties": {"owner": {"type": "string"}, "repo": {"type": "string"}, "title": {"type": "string"}, "body": {"type": "string"}}}},
+      {"name": "search_repositories", "description": "Search for GitHub repositories matching a query.", "inputSchema": {"type": "object", "properties": {"query": {"type": "string"}, "page": {"type": "number"}}}},
+      {"name": "list_commits", "description": "Get a list of commits of a branch in a repository.", "inputSchema": {"type": "object", "properties": {"owner": {"type": "string"}, "repo": {"type": "string"}, "page_token": {"type": "string"}}}}
+    ]
+  }
+}
