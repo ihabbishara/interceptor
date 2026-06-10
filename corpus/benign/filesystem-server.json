@@ -1,0 +1,11 @@
+{
+  "expect": [],
+  "manifest": {
+    "server": "filesystem",
+    "tools": [
+      {"name": "read_file", "description": "Read the complete contents of a file from the file system. Handles various text encodings and provides detailed error messages if the file cannot be read.", "inputSchema": {"type": "object", "properties": {"path": {"type": "string"}}}},
+      {"name": "write_file", "description": "Create a new file or completely overwrite an existing file with new content.", "inputSchema": {"type": "object", "properties": {"path": {"type": "string"}, "content": {"type": "string"}}}},
+      {"name": "list_directory", "description": "Get a detailed listing of all files and directories in a specified path.", "inputSchema": {"type": "object", "properties": {"path": {"type": "string"}}}}
+    ]
+  }
+}
