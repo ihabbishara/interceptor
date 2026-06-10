@@ -5,5 +5,6 @@ package detect
 func All() []Detector {
 	return []Detector{
 		PoisoningDetector{},
+		UnicodeDetector{},
 	}
 }
