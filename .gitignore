@@ -1,3 +1,6 @@
 /interceptor
 dist/
 *.test
+spike/loader/ssl_bpf*.go
+spike/loader/*.o
+spike/bpf/vmlinux.h
