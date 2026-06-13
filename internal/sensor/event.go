@@ -29,12 +29,16 @@ func (d Direction) String() string {
 // produces these; userspace consumes them. A single logical HTTP message is
 // reassembled from many RawEvents sharing a StreamKey, ordered by Seq.
 type RawEvent struct {
-	PID       uint32    // process that made the TLS call
-	FD        int32     // file descriptor of the TLS socket
+	PID uint32 // process that made the TLS call
+	// FD is the kernel fd; always >= 0. A negative value is invalid and
+	// callers must drop the event rather than construct a RawEvent with it.
+	FD        int32
 	Direction Direction // out = request (SSL_write), in = response (SSL_read)
 	Seq       uint64    // monotonic per (pid,fd,direction); orders chunks
 	TimeNs    uint64    // kernel timestamp (ktime), for cross-wire ordering
-	Data      []byte    // the plaintext chunk
+	// Data is the plaintext chunk. It may alias a reused ring-buffer backing
+	// array; consumers that retain it past the read callback MUST copy it.
+	Data []byte
 }
 
 // StreamKey groups chunks belonging to one direction of one fd of one
