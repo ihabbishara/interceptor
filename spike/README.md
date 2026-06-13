@@ -7,8 +7,11 @@ body before OpenSSL encrypts it, and surface it as RawEvents.
 
 1. `cd spike && vagrant up && vagrant ssh`
 2. Inside the VM: `cd /vagrant`
-3. Build the loader: `go build ./spike/loader` (after Task 5)
-4. Terminal A: `sudo ./loader`   # attaches uprobes, prints RawEvents
+3. Generate + build the loader (after Task 5):
+   - `go generate -tags spike ./spike/loader`   # bpf2go compiles ssl.c
+   - The loader sits behind the `spike` build tag (and `linux`), so the
+     default `go build ./...` / `go test ./...` surface excludes it.
+4. Terminal A: `sudo go run -tags spike ./spike/loader`   # attaches uprobes, prints RawEvents
 5. Terminal B: `python3 spike/target/llm_call.py`
 
 ## Success criterion

@@ -1,3 +1,5 @@
+//go:build linux && spike
+
 // Loads ssl.bpf.o, attaches the SSL_write uprobe to the libssl CPython uses,
 // reads the ring buffer, and prints each capture as an internal/sensor.RawEvent.
 // This closes the kernel->RawEvent seam end to end.
