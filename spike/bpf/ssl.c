@@ -10,10 +10,10 @@
 #define MAX_DATA 1024  // bounded copy; spike only needs to see the marker
 
 struct event {
-    __u32 pid;
-    __u8  direction; // 0 = out (write), 1 = in (read)
-    __u32 len;
     __u64 time_ns;
+    __u32 pid;
+    __u32 len;
+    __u8  direction; // 0 = out (write), 1 = in (read)
     __u8  data[MAX_DATA];
 };
 

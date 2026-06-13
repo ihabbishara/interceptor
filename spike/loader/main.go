@@ -8,6 +8,8 @@
 //	sudo go run .
 package main
 
+//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang ssl ../bpf/ssl.c
+
 import (
 	"bytes"
 	"encoding/binary"
@@ -24,12 +26,13 @@ import (
 	"interceptor/internal/sensor"
 )
 
-// mirrors struct event in ssl.c
+// mirrors struct event in ssl.c — field order is descending-by-alignment so
+// there is no interior padding; binary.Read (packed) matches the C layout.
 type rawCapture struct {
-	PID       uint32
-	Direction uint8
-	Len       uint32
 	TimeNs    uint64
+	PID       uint32
+	Len       uint32
+	Direction uint8
 	Data      [1024]byte
 }
 
@@ -99,6 +102,9 @@ func main() {
 		}
 		var c rawCapture
 		if err := binary.Read(bytes.NewReader(rec.RawSample), binary.LittleEndian, &c); err != nil {
+			continue
+		}
+		if c.Len > uint32(len(c.Data)) {
 			continue
 		}
 		ev := sensor.RawEvent{
