@@ -39,11 +39,14 @@ type rawCapture struct {
 }
 
 // libsslPath returns the libssl the running python loaded. The spike runbook
-// explains how to confirm it; this default fits Ubuntu 22.04.
+// explains how to confirm it; these defaults cover Ubuntu 22.04 on both
+// x86_64 and aarch64 (Apple Silicon VMs run arm64 Linux).
 func libsslPath() string {
 	for _, p := range []string{
 		"/usr/lib/x86_64-linux-gnu/libssl.so.3",
 		"/lib/x86_64-linux-gnu/libssl.so.3",
+		"/usr/lib/aarch64-linux-gnu/libssl.so.3",
+		"/lib/aarch64-linux-gnu/libssl.so.3",
 	} {
 		if _, err := os.Stat(p); err == nil {
 			return p
