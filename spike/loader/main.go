@@ -78,12 +78,26 @@ func main() {
 		fmt.Fprintln(os.Stderr, "open libssl:", err)
 		os.Exit(1)
 	}
-	up, err := ex.Uprobe("SSL_write", objs.ProbeSslWrite, nil)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "attach SSL_write uprobe:", err)
+	// Attach to both SSL_write and SSL_write_ex: OpenSSL 3.x clients
+	// (incl. CPython 3.10's _ssl) call SSL_write_ex, not SSL_write. Require
+	// at least one to attach; tolerate a missing symbol on either.
+	attached := 0
+	if up, err := ex.Uprobe("SSL_write", objs.ProbeSslWrite, nil); err == nil {
+		defer up.Close()
+		attached++
+	} else {
+		fmt.Fprintln(os.Stderr, "note: SSL_write attach:", err)
+	}
+	if up, err := ex.Uprobe("SSL_write_ex", objs.ProbeSslWriteEx, nil); err == nil {
+		defer up.Close()
+		attached++
+	} else {
+		fmt.Fprintln(os.Stderr, "note: SSL_write_ex attach:", err)
+	}
+	if attached == 0 {
+		fmt.Fprintln(os.Stderr, "no write uprobe attached")
 		os.Exit(1)
 	}
-	defer up.Close()
 
 	rd, err := ringbuf.NewReader(objs.Events)
 	if err != nil {
